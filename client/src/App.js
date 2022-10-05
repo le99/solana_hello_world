@@ -12,8 +12,8 @@ import * as web3 from '@solana/web3.js';
 
 const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
 const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
-
-
+//https://docs.phantom.app/integrating/extension-and-in-app-browser-web-apps/sending-a-transaction
+//https://stackoverflow.com/questions/71021177/transaction-recent-blockhash-required-phantom-wallet-solana
 function App() {
 
   let auth = useAuth();
@@ -28,25 +28,26 @@ function App() {
     // const { signature } = await provider.signAndSendTransaction(transaction);
     // await connection.getSignatureStatus(signature);
 
-    let payer = web3.Keypair.generate();
+    // let payer = web3.Keypair.generate();
+    let payer = {publicKey: auth.user};
     console.log("Generated payer address:", payer.publicKey.toBase58());
   
     // fund the "throw away" wallet via an airdrop
-    console.log("Requesting airdrop...");
-    let airdropSignature = await connection.requestAirdrop(
-      payer.publicKey,
-      web3.LAMPORTS_PER_SOL,
-    );
+    // console.log("Requesting airdrop...");
+    // let airdropSignature = await connection.requestAirdrop(
+    //   payer.publicKey,
+    //   web3.LAMPORTS_PER_SOL,
+    // );
   
-    // wait for the airdrop to be completed
-    await connection.confirmTransaction(airdropSignature);
+    // // wait for the airdrop to be completed
+    // await connection.confirmTransaction(airdropSignature);
   
     // log the signature to the console
 
-    console.log(
-      "Airdrop submitted:",
-      `https://explorer.solana.com/tx/${airdropSignature}?cluster=${SOLANA_CLUSTER}`,
-    );
+    // console.log(
+    //   "Airdrop submitted:",
+    //   `https://explorer.solana.com/tx/${airdropSignature}?cluster=${SOLANA_CLUSTER}`,
+    // );
 
     // create an empty transaction
     const transaction = new web3.Transaction();
@@ -72,13 +73,12 @@ function App() {
 
     // submit the transaction to the cluster
     console.log("Sending transaction...");
-    let txid = await web3.sendAndConfirmTransaction(connection, transaction, [
-      payer,
-    ]);
-    console.log(
-      "Transaction submitted:",
-      `https://explorer.solana.com/tx/${txid}?cluster=${SOLANA_CLUSTER}`,
-    );
+    const { signature } = await provider.signAndSendTransaction(transaction);
+
+    // console.log(
+    //   "Transaction submitted:",
+    //   `https://explorer.solana.com/tx/${txid}?cluster=${SOLANA_CLUSTER}`,
+    // );
   
 
   }
