@@ -14,15 +14,17 @@ const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
 const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
 //https://docs.phantom.app/integrating/extension-and-in-app-browser-web-apps/sending-a-transaction
 //https://stackoverflow.com/questions/71021177/transaction-recent-blockhash-required-phantom-wallet-solana
+//https://buildspace.so/p/build-solana-web3-app
+
 function App() {
 
-  let auth = useAuth();
+  // let auth = useAuth();
 
 
   async function onClick(){
     let provider = getProvider();
 
-    await initPhantom();
+    let pk = await initPhantom();
 
     const network = "http://127.0.0.1:8899";
 
@@ -32,7 +34,7 @@ function App() {
     // await connection.getSignatureStatus(signature);
 
     // let payer = web3.Keypair.generate();
-    let payer = {publicKey: auth.user};
+    let payer = {publicKey: pk};
     console.log("Generated payer address:", payer.publicKey.toBase58());
   
     // fund the "throw away" wallet via an airdrop
@@ -92,7 +94,7 @@ function App() {
 
   return (
     <SmallContainer>
-      <p>Hi: {JSON.stringify(auth.user)}</p>
+      {/* <p>Hi: {JSON.stringify({}))}</p> */}
       <button onClick={onClick}>Click</button>
     </SmallContainer>
   );

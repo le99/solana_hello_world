@@ -31,8 +31,12 @@ root.render(
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="recover" element={<Recover />} />
-          <Route path="home" element={
+          {/* <Route path="home" element={
             <RequireAuth><App /></RequireAuth>
+          } />
+        </Routes> */}
+          <Route path="home" element={
+            <App />
           } />
         </Routes>
       </BrowserRouter>

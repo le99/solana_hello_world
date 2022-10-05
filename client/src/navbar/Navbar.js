@@ -102,13 +102,13 @@ export default function MenuAppBar({backPage}) {
           }
           
 
-          {auth.user.email && (
+          {auth.user && auth.user.email && (
             <MenuItem>
               <Typography textAlign="center">{auth.user.email}</Typography>
             </MenuItem>
           )}
 
-          {auth.user.email && (
+          {auth.user && auth.user.email && (
             <div>
               <IconButton
                 size="large"
