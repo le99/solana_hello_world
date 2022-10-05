@@ -2,7 +2,6 @@ import * as React from 'react';
 import {useState, useEffect} from 'react';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
-const solanaWeb3 = require('@solana/web3.js');
 
 import {
   useLocation,

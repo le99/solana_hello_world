@@ -10,6 +10,10 @@ import {getProvider} from './auth/Auth';
 import * as web3 from '@solana/web3.js';
 
 
+const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
+const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
+
+
 function App() {
 
   let auth = useAuth();
@@ -38,11 +42,42 @@ function App() {
     await connection.confirmTransaction(airdropSignature);
   
     // log the signature to the console
-    const SOLANA_CLUSTER = "abs"; 
 
     console.log(
       "Airdrop submitted:",
-      `https://explorer.solana.com/tx/${airdropSignature}?cluster=custom&customUrl=http%3A%2F%2Flocalhost%3A8899`,
+      `https://explorer.solana.com/tx/${airdropSignature}?cluster=${SOLANA_CLUSTER}`,
+    );
+
+    // create an empty transaction
+    const transaction = new web3.Transaction();
+
+    // add a single instruction to the transaction
+    transaction.add(
+      new web3.TransactionInstruction({
+        keys: [
+          {
+            pubkey: payer.publicKey,
+            isSigner: true,
+            isWritable: false,
+          },
+          {
+            pubkey: web3.SystemProgram.programId,
+            isSigner: false,
+            isWritable: false,
+          },
+        ],
+        programId: new web3.PublicKey(PROGRAM_ID),
+      }),
+    );
+
+    // submit the transaction to the cluster
+    console.log("Sending transaction...");
+    let txid = await web3.sendAndConfirmTransaction(connection, transaction, [
+      payer,
+    ]);
+    console.log(
+      "Transaction submitted:",
+      `https://explorer.solana.com/tx/${txid}?cluster=${SOLANA_CLUSTER}`,
     );
   
 
