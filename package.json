@@ -1,0 +1,15 @@
+{
+	"name": "browser-esm-webpack",
+	"scripts": {
+		"start": "nodemon -e yaml,js ./bin/www",
+		"dev": "webpack serve --config webpack.dev.js",
+		"build": "cd ./client && npm i && npm run build && cd ../server && npm i  && rm -rf ./public && cp -r ../client/build/ ../server/public"
+	},
+	"engines": {
+		"node": "14.16"
+	},
+	"devDependencies": {
+	},
+	"dependencies": {
+	}
+}
