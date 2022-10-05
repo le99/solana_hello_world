@@ -4,7 +4,7 @@ import Navbar from './navbar/Navbar';
 import { Paper } from '@mui/material';
 import Container from '@mui/material/Container';
 import SmallContainer from './util/SmallContainer'
-import {getProvider} from './auth/Auth';
+import {getProvider, initPhantom} from './auth/Auth';
 
 
 import * as web3 from '@solana/web3.js';
@@ -21,6 +21,9 @@ function App() {
 
   async function onClick(){
     let provider = getProvider();
+
+    await initPhantom();
+
     const network = "http://127.0.0.1:8899";
 
     const connection = new web3.Connection(network);
@@ -49,8 +52,12 @@ function App() {
     //   `https://explorer.solana.com/tx/${airdropSignature}?cluster=${SOLANA_CLUSTER}`,
     // );
 
+    let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
     // create an empty transaction
-    const transaction = new web3.Transaction();
+    let transaction = new web3.Transaction({
+      feePayer: payer.publicKey,
+      recentBlockhash: blockhash
+    });
 
     // add a single instruction to the transaction
     transaction.add(

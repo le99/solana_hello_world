@@ -43,8 +43,8 @@ export const getProvider = () => {
   window.open('https://phantom.app/', '_blank');
 };
 
-async function initPhantom(){
-  const provider = getProvider(); // see "Detecting the Provider"
+export async function initPhantom(){
+  const provider = getProvider("http://127.0.0.1:8899"); // see "Detecting the Provider"
   if(provider){
     const resp = await provider.connect();
     return resp.publicKey;
