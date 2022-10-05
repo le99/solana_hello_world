@@ -17,6 +17,9 @@ const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
 //https://buildspace.so/p/build-solana-web3-app
 //https://github.com/solana-labs/wallet-adapter#usage
 
+
+//https://solana.com/news/solana-scaffold-part-1-wallet-adapter
+
 function App() {
 
   // let auth = useAuth();
