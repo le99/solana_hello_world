@@ -15,6 +15,7 @@ const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
 //https://docs.phantom.app/integrating/extension-and-in-app-browser-web-apps/sending-a-transaction
 //https://stackoverflow.com/questions/71021177/transaction-recent-blockhash-required-phantom-wallet-solana
 //https://buildspace.so/p/build-solana-web3-app
+//https://github.com/solana-labs/wallet-adapter#usage
 
 function App() {
 
