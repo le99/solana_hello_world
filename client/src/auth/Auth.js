@@ -46,30 +46,54 @@ const getProvider = () => {
 
 async function initPhantom(){
   const provider = getProvider(); // see "Detecting the Provider"
-  try {
+  if(provider){
     const resp = await provider.connect();
     return resp.publicKey;
-  } catch (err) {
-    // { code: 4001, message: 'User rejected the request.' }
-    throw new Error("not connected");
   }
+  throw new Error("mmm");
 }
+
+const phantomPromise = initPhantom();
 
 export function AuthProvider({ children }) {
 
   let [user, setUser] = useState(null);
   let [userLoading, setUserLoading] = useState(true);
 
+  let [phantomErr, setPhantomErr] = useState(null);
+
+
   useEffect(() => {
 
     (async() => {
-      let u = await initPhantom();
-      setUser(u);
-      setUserLoading(false);
+      try{
+        let u = await phantomPromise;
+        const provider = getProvider();
+      
+        provider.on("connect", (publicKey) => {
+          setUser(publicKey);
+          setUserLoading(false);
+        });
+
+        provider.on("disconnect", () => {
+          setUser(null);
+          setUserLoading(false);
+        });
+
+        provider.on('accountChanged', (publicKey) => {
+          setUser(publicKey);
+        });
+      }
+      catch(err){
+        setPhantomErr(err.message);
+      }
+
+      
+
     })()
 
-    const account = localGetAccount();
-    setUser(account);
+    // const account = localGetAccount();
+    // setUser(account);
   }, []);
 
   let signin = async ({email, password}) => {
@@ -77,8 +101,8 @@ export function AuthProvider({ children }) {
     if(!email){
       account = {email:'default@default.com'}
     }
-    localSaveAccount(account);
-    setUser(account);
+    // localSaveAccount(account);
+    // setUser(account);
   };
 
   let recover = async () => {
@@ -89,7 +113,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  let value = { user, signin, signout, recover };
+  let value = { user, signin, signout, recover, phantomErr };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

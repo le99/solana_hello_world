@@ -106,6 +106,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+            <div>{auth.phantomErr}</div>
             <Grid container>
               <Grid item xs>
                 <LinkUI href="#" variant="body2" component={Link} to="/recover">
