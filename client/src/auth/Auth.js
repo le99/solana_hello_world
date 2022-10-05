@@ -2,6 +2,7 @@ import * as React from 'react';
 import {useState, useEffect} from 'react';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
+const solanaWeb3 = require('@solana/web3.js');
 
 import {
   useLocation,
@@ -32,7 +33,7 @@ function localRemoveAccount(){
 
 
 
-const getProvider = () => {
+export const getProvider = () => {
   if ('phantom' in window) {
     const provider = window.phantom && window.phantom.solana;
 
@@ -40,7 +41,6 @@ const getProvider = () => {
       return provider;
     }
   }
-
   window.open('https://phantom.app/', '_blank');
 };
 
@@ -50,6 +50,7 @@ async function initPhantom(){
     const resp = await provider.connect();
     return resp.publicKey;
   }
+
   throw new Error("mmm");
 }
 
@@ -68,8 +69,11 @@ export function AuthProvider({ children }) {
     (async() => {
       try{
         let u = await phantomPromise;
+        setUser(u);
+        setUserLoading(false);
+
         const provider = getProvider();
-      
+
         provider.on("connect", (publicKey) => {
           setUser(publicKey);
           setUserLoading(false);
