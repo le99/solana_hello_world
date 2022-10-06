@@ -50,7 +50,7 @@ export async function initPhantom(){
     return resp.publicKey;
   }
 
-  throw new Error("mmm");
+  throw new Error("No Phantom Wallet");
 }
 
 const phantomPromise = initPhantom();
@@ -67,14 +67,10 @@ export function AuthProvider({ children }) {
 
     (async() => {
       try{
-        let u = await phantomPromise;
-        setUser(u);
-        setUserLoading(false);
-
         const provider = getProvider();
 
         provider.on("connect", (publicKey) => {
-          setUser(publicKey);
+          setUser(publicKey.toString());
           setUserLoading(false);
         });
 
@@ -84,8 +80,12 @@ export function AuthProvider({ children }) {
         });
 
         provider.on('accountChanged', (publicKey) => {
-          setUser(publicKey);
+          setUser(publicKey.toString());
         });
+
+        let u = await phantomPromise;
+        // setUser(u);
+        // setUserLoading(false);
       }
       catch(err){
         setPhantomErr(err.message);

@@ -21,14 +21,9 @@ const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
 //https://solana.com/news/solana-scaffold-part-1-wallet-adapter
 
 
-async function getAddress(){
-  let provider = getProvider();
-  console.log(provider.publicKey.toBase58());
-}
-
 function App() {
 
-  // let auth = useAuth();
+  let auth = useAuth();
 
 
   async function onClick(){
@@ -104,9 +99,8 @@ function App() {
 
   return (
     <SmallContainer>
-      {/* <p>Hi: {JSON.stringify({}))}</p> */}
+      <p>Hi: {auth && auth.user }</p>
       <button onClick={onClick}>Click</button>
-      <button onClick={getAddress}>Get address</button>
 
     </SmallContainer>
   );
