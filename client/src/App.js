@@ -98,15 +98,16 @@ function App() {
     // create an empty transaction
     let transaction = new web3.Transaction({
       feePayer: payer.publicKey,
-      recentBlockhash: blockhash
+      recentBlockhash: blockhash,
     });
 
     // add a single instruction to the transaction
-    transaction.add(allocTx).add(tx2);
+    transaction.add(allocTx).add(tx2).sign(counterKeypair);
 
     // submit the transaction to the cluster
     console.log("Sending transaction...");
     const { signature } = await provider.signAndSendTransaction(transaction);
+
 
     console.log(
       "Transaction submitted:",
