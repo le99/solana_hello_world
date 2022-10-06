@@ -5,7 +5,7 @@ import { Paper } from '@mui/material';
 import Container from '@mui/material/Container';
 import SmallContainer from './util/SmallContainer'
 import {getProvider, initPhantom} from './auth/Auth';
-
+import * as  BN from 'bn.js';
 
 import * as web3 from '@solana/web3.js';
 import {Buffer} from 'buffer/';
@@ -117,7 +117,6 @@ function App() {
     console.log("Sending transaction...");
     const { signature } = await provider.signAndSendTransaction(transaction);
 
-
     console.log(
       "Transaction submitted:",
       `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
@@ -187,6 +186,11 @@ function App() {
     console.log("Sending transaction...");
     const { signature } = await provider.signAndSendTransaction(transaction);
 
+    let counterAccountInfo = await connection.getAccountInfo(counter, { commitment: "confirmed" });
+    
+    
+    let val = new BN(counterAccountInfo.data, 'le')
+    console.log('-->', val.count.toNumber());
 
     console.log(
       "Transaction submitted:",
