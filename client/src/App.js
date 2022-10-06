@@ -190,7 +190,7 @@ function App() {
     
     
     let val = new BN(counterAccountInfo.data, 'le')
-    console.log('-->', val.count.toNumber());
+    console.log('-->', val.toNumber());
 
     console.log(
       "Transaction submitted:",
