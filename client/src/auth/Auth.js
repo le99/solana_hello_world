@@ -113,7 +113,7 @@ export function AuthProvider({ children }) {
 
   let signout = () => {
     localRemoveAccount();
-    setUser(null);
+    // setUser(null);
   };
 
   let value = { user, signin, signout, recover, phantomErr };
