@@ -78,7 +78,7 @@ export default function MenuAppBar({backPage}) {
               <Typography variant="h6" sx={{ flexGrow: 1 }} style={{cursor: 'pointer'}} 
                 onClick={() => {navigate(backPage)}}
               >
-                Home
+                Giro Protocol
               </Typography>
             </React.Fragment>
             :
@@ -96,7 +96,7 @@ export default function MenuAppBar({backPage}) {
               <Typography variant="h6" sx={{ flexGrow: 1 }} style={{cursor: 'pointer'}} 
                 onClick={toggleDrawer(true)}
               >
-                Home
+                Giro Protocol
               </Typography>
             </React.Fragment>
           }
@@ -186,25 +186,33 @@ export default function MenuAppBar({backPage}) {
         >
           <List>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={() => {navigate(`/home`);}}>
                 <ListItemIcon>
                   <DescriptionIcon />
                 </ListItemIcon>
-                <ListItemText primary={"Documentos"} />
+                <ListItemText primary={"submit"} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => {navigate(`/validate`);}}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText primary={"validate"} />
               </ListItemButton>
             </ListItem>
           </List>
-          {/* <Divider />
+          <Divider />
           <List>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => {navigate(`/dns/list`);}}>
+              <ListItemButton onClick={() => {navigate(`/test`);}}>
                 <ListItemIcon>
                   <DnsIcon />
                 </ListItemIcon>
-                <ListItemText primary={"DNS"} />
+                <ListItemText primary={"Test Phantom"} />
               </ListItemButton>
             </ListItem>
-          </List> */}
+          </List>
         </Box>
       </Drawer>
     </div>

@@ -5,6 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import SignIn from './auth/SignIn';
 import SignUp from './auth/SignUp';
 import Recover from './auth/Recover';
+import SubmitPage from './pages/SubmitPage';
+import ValidatePage from './pages/ValidatePage';
 
 import { RequireAuth, AuthProvider } from './auth/Auth';
 
@@ -36,6 +38,12 @@ root.render(
           } />
         </Routes> */}
           <Route path="home" element={
+            <SubmitPage />
+          } />
+          <Route path="validate" element={
+            <ValidatePage />
+          } />
+          <Route path="test" element={
             <App />
           } />
         </Routes>

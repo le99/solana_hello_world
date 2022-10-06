@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
-import {useAuth} from './auth/Auth';
-import Navbar from './navbar/Navbar';
+import React from 'react';
+import {useAuth} from '../auth/Auth';
+import Navbar from '../navbar/Navbar';
 import { Paper } from '@mui/material';
 import Container from '@mui/material/Container';
-import SmallContainer from './util/SmallContainer'
-import {getProvider, initPhantom} from './auth/Auth';
+import SmallContainer from '../util/SmallContainer'
+import {getProvider, initPhantom} from '../auth/Auth';
 import * as  BN from 'bn.js';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 import * as web3 from '@solana/web3.js';
 import {Buffer} from 'buffer/';
@@ -25,34 +30,6 @@ const toHexString = (bytes) =>
 function App() {
 
   let auth = useAuth();
-
-  let [countVal, setCountValue] = useState(null);
-
-  React.useEffect(() => {
-    (async () => {
-
-      try{
-        let pk = auth.user;
-
-        const network = "http://127.0.0.1:8899";
-  
-        const connection = new web3.Connection(network);
-        const counterKeypair = web3.Keypair.fromSecretKey(fromHexString(PRIVATE_KEY));
-        const counter = counterKeypair.publicKey;
-        let counterAccountInfo = await connection.getAccountInfo(counter, { commitment: "confirmed" });
-      
-        let val = new BN(counterAccountInfo.data, 'le').toNumber();
-  
-        console.log(val);
-        setCountValue(val);  
-      }
-      catch(err){
-        console.log(err);
-      }
-
-    })();
-  }, []);
-
 
 
   async function airDrop(){
@@ -149,11 +126,6 @@ function App() {
       "Transaction submitted:",
       `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
     );
-
-    let counterAccountInfo = await connection.getAccountInfo(counter, { commitment: "confirmed" });
-    
-    let val = new BN(counterAccountInfo.data, 'le')
-    setCountValue(val.toNumber());
   }
 
   async function onClick2(){
@@ -223,7 +195,7 @@ function App() {
     
     
     let val = new BN(counterAccountInfo.data, 'le')
-    setCountValue(val.toNumber());
+    console.log('-->', val.toNumber());
 
     console.log(
       "Transaction submitted:",
@@ -233,14 +205,42 @@ function App() {
 
   return (
     <SmallContainer>
-      <button onClick={airDrop}>AirDrop</button>
-      <button onClick={onClick}>Create Counter</button>
-      <button onClick={onClick2}>Increment</button>
+      <Typography component="h1" variant="h5">
+        Oracle Validation
+      </Typography>
 
-      <div>
-        Counter Value: {countVal}
-      </div>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        name="password"
+        label="BTC/ETH"
+        type="text"
+        id="password"
+        autoComplete="current-password"
+        value="13"
+        // contentEditable="false"
+      />
 
+      <Grid container justifyContent="flex-end">        
+        <Button
+          color="error"
+          type="submit"
+          variant="contained"
+          sx={{ mt: 0, mb: 0 }}
+        >
+          Reject
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ mt: 0, mb: 0, ml: 1 }}
+        >
+          Aprove
+        </Button>
+
+      </Grid>
+      
     </SmallContainer>
   );
 }
