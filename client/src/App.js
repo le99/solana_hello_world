@@ -20,6 +20,12 @@ const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
 
 //https://solana.com/news/solana-scaffold-part-1-wallet-adapter
 
+
+async function getAddress(){
+  let provider = getProvider();
+  console.log(provider.publicKey.toBase58());
+}
+
 function App() {
 
   // let auth = useAuth();
@@ -42,21 +48,21 @@ function App() {
     console.log("Generated payer address:", payer.publicKey.toBase58());
   
     // fund the "throw away" wallet via an airdrop
-    // console.log("Requesting airdrop...");
-    // let airdropSignature = await connection.requestAirdrop(
-    //   payer.publicKey,
-    //   web3.LAMPORTS_PER_SOL,
-    // );
+    console.log("Requesting airdrop...");
+    let airdropSignature = await connection.requestAirdrop(
+      payer.publicKey,
+      web3.LAMPORTS_PER_SOL,
+    );
   
-    // // wait for the airdrop to be completed
-    // await connection.confirmTransaction(airdropSignature);
+    // wait for the airdrop to be completed
+    await connection.confirmTransaction(airdropSignature);
   
     // log the signature to the console
 
-    // console.log(
-    //   "Airdrop submitted:",
-    //   `https://explorer.solana.com/tx/${airdropSignature}?cluster=${SOLANA_CLUSTER}`,
-    // );
+    console.log(
+      "Airdrop submitted:",
+      `https://explorer.solana.com/tx/${airdropSignature}?cluster=${SOLANA_CLUSTER}`,
+    );
 
     let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
     // create an empty transaction
@@ -88,10 +94,10 @@ function App() {
     console.log("Sending transaction...");
     const { signature } = await provider.signAndSendTransaction(transaction);
 
-    // console.log(
-    //   "Transaction submitted:",
-    //   `https://explorer.solana.com/tx/${txid}?cluster=${SOLANA_CLUSTER}`,
-    // );
+    console.log(
+      "Transaction submitted:",
+      `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
+    );
   
 
   }
@@ -100,6 +106,8 @@ function App() {
     <SmallContainer>
       {/* <p>Hi: {JSON.stringify({}))}</p> */}
       <button onClick={onClick}>Click</button>
+      <button onClick={getAddress}>Get address</button>
+
     </SmallContainer>
   );
 }
