@@ -12,15 +12,15 @@ import {Buffer} from 'buffer/';
 
 const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
 const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
-//https://docs.phantom.app/integrating/extension-and-in-app-browser-web-apps/sending-a-transaction
-//https://stackoverflow.com/questions/71021177/transaction-recent-blockhash-required-phantom-wallet-solana
-//https://buildspace.so/p/build-solana-web3-app
-//https://github.com/solana-labs/wallet-adapter#usage
 
+const PRIVATE_KEY = "0bf51a027c36bac4e0372e59e809a29273467ff69b996a82cd11a048edb33015a9f656a0a9ca129049780d1b8666ae0a90d4c332a40572bbaa2da8f5ce032cb1";
 
-//https://solana.com/news/solana-scaffold-part-1-wallet-adapter
+const fromHexString = (hexString) =>
+  Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
 
-console.log(Buffer.from([0x0]));
+const toHexString = (bytes) =>
+  bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
+
 
 function App() {
 
@@ -66,7 +66,17 @@ function App() {
     let payer = {publicKey: pk};
    
 
-    const counterKeypair = web3.Keypair.generate();
+    // const counterKeypair = web3.Keypair.generate();
+    // const s = Buffer.from(counterKeypair.secretKey);
+    // console.log(s);
+
+    // const t = fromHexString(s.toString('hex'));
+    // console.log(t);
+
+    const counterKeypair = web3.Keypair.fromSecretKey(fromHexString(PRIVATE_KEY));
+    // console.log(counterKeypair);
+
+
     const counter = counterKeypair.publicKey;
 
 
@@ -93,7 +103,6 @@ function App() {
     });
 
 
-
     let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
     // create an empty transaction
     let transaction = new web3.Transaction({
@@ -113,14 +122,83 @@ function App() {
       "Transaction submitted:",
       `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
     );
-  
+  }
 
+  async function onClick2(){
+    
+    let provider = getProvider();
+    let pk = auth.user;
+
+
+    const network = "http://127.0.0.1:8899";
+
+    const connection = new web3.Connection(network);
+    let payer = {publicKey: pk};
+   
+
+    // const counterKeypair = web3.Keypair.generate();
+    // const s = Buffer.from(counterKeypair.secretKey);
+    // console.log(s);
+
+    // const t = fromHexString(s.toString('hex'));
+    // console.log(t);
+
+    const counterKeypair = web3.Keypair.fromSecretKey(fromHexString(PRIVATE_KEY));
+    // console.log(counterKeypair);
+
+
+    const counter = counterKeypair.publicKey;
+
+
+    const COUNTER_ACCOUNT_SIZE = 8;
+    const allocTx = web3.SystemProgram.createAccount({
+      fromPubkey: payer.publicKey,
+      newAccountPubkey: counter,
+      lamports: await connection.getMinimumBalanceForRentExemption(COUNTER_ACCOUNT_SIZE),
+      space: COUNTER_ACCOUNT_SIZE,
+      programId: new web3.PublicKey(PROGRAM_ID)
+    });
+
+
+    const tx2 = new web3.TransactionInstruction({
+      programId: new web3.PublicKey(PROGRAM_ID),
+      keys: [
+        {
+          pubkey: counter,
+          isSigner: false,
+          isWritable: true
+        }
+      ],
+      data: Buffer.from([0x0])
+    });
+
+
+    let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
+    // create an empty transaction
+    let transaction = new web3.Transaction({
+      feePayer: payer.publicKey,
+      recentBlockhash: blockhash,
+    });
+
+    // add a single instruction to the transaction
+    transaction.add(tx2);
+
+    // submit the transaction to the cluster
+    console.log("Sending transaction...");
+    const { signature } = await provider.signAndSendTransaction(transaction);
+
+
+    console.log(
+      "Transaction submitted:",
+      `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
+    );
   }
 
   return (
     <SmallContainer>
       <button onClick={airDrop}>AirDrop</button>
       <button onClick={onClick}>Tx</button>
+      <button onClick={onClick2}>Tx2</button>
 
     </SmallContainer>
   );
