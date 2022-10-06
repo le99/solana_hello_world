@@ -102,15 +102,15 @@ export default function MenuAppBar({backPage}) {
           }
           
 
-          {auth.user && auth.user && (
+          {auth.user && (
             <MenuItem onClick={() => {
-              navigator.clipboard.writeText(auth.user);
+              navigator.clipboard.writeText(auth.user.toString());
             }} >
-              <Typography textAlign="center">{auth.user}</Typography>
+              <Typography textAlign="center">{auth.user.toString()}</Typography>
             </MenuItem>
           )}
 
-          {auth.user && auth.user && (
+          {auth.user && (
             <div>
               <IconButton
                 size="large"

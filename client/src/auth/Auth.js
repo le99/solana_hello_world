@@ -70,7 +70,7 @@ export function AuthProvider({ children }) {
         const provider = getProvider();
 
         provider.on("connect", (publicKey) => {
-          setUser(publicKey.toString());
+          setUser(publicKey);
           setUserLoading(false);
         });
 
@@ -80,7 +80,7 @@ export function AuthProvider({ children }) {
         });
 
         provider.on('accountChanged', (publicKey) => {
-          setUser(publicKey.toString());
+          setUser(publicKey);
         });
 
         let u = await phantomPromise;

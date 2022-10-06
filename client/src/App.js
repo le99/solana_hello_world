@@ -26,19 +26,12 @@ function App() {
   let auth = useAuth();
 
 
-  async function onClick(){
-    let provider = getProvider();
-
-    let pk = await initPhantom();
+  async function airDrop(){
+    let pk = auth.user;
 
     const network = "http://127.0.0.1:8899";
 
     const connection = new web3.Connection(network);
-    // const transaction = new web3.Transaction();
-    // const { signature } = await provider.signAndSendTransaction(transaction);
-    // await connection.getSignatureStatus(signature);
-
-    // let payer = web3.Keypair.generate();
     let payer = {publicKey: pk};
     console.log("Generated payer address:", payer.publicKey.toBase58());
   
@@ -58,7 +51,17 @@ function App() {
       "Airdrop submitted:",
       `https://explorer.solana.com/tx/${airdropSignature}?cluster=${SOLANA_CLUSTER}`,
     );
+  }
 
+  async function onClick(){
+    let provider = getProvider();
+    let pk = auth.user;
+
+    const network = "http://127.0.0.1:8899";
+
+    const connection = new web3.Connection(network);
+    let payer = {publicKey: pk};
+   
     let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
     // create an empty transaction
     let transaction = new web3.Transaction({
@@ -99,8 +102,8 @@ function App() {
 
   return (
     <SmallContainer>
-      <p>Hi: {auth && auth.user }</p>
-      <button onClick={onClick}>Click</button>
+      <button onClick={airDrop}>AirDrop</button>
+      <button onClick={onClick}>Tx</button>
 
     </SmallContainer>
   );
