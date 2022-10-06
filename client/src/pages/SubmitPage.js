@@ -211,7 +211,7 @@ function App() {
         required
         fullWidth
         name="password"
-        label="BTC/ETH"
+        label="SOL/USDC"
         type="text"
         id="password"
         autoComplete="current-password"
