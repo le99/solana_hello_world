@@ -28,8 +28,6 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
-
 export default function SignIn() {
 
   let navigate = useNavigate();
@@ -56,9 +54,8 @@ export default function SignIn() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,

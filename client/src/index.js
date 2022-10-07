@@ -23,32 +23,44 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<SignIn />} />        
-          <Route path="signin" element={<SignIn />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="recover" element={<Recover />} />
-          {/* <Route path="home" element={
-            <RequireAuth><App /></RequireAuth>
-          } />
-        </Routes> */}
-          <Route path="home" element={
-            <SubmitPage />
-          } />
-          <Route path="validate" element={
-            <ValidatePage />
-          } />
-          <Route path="test" element={
-            <App />
-          } />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <CssBaseline />
+    <ThemeProvider theme={darkTheme}>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route index element={<SignIn />} />        
+            <Route path="signin" element={<SignIn />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="recover" element={<Recover />} />
+            {/* <Route path="home" element={
+              <RequireAuth><App /></RequireAuth>
+            } />
+          </Routes> */}
+            <Route path="home" element={
+              <SubmitPage />
+            } />
+            <Route path="validate" element={
+              <ValidatePage />
+            } />
+            <Route path="test" element={
+              <App />
+            } />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 

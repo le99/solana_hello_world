@@ -4,6 +4,7 @@ import Navbar from '../navbar/Navbar';
 import { Paper } from '@mui/material';
 import Container from '@mui/material/Container';
 import PropTypes from 'prop-types';
+import CssBaseline from '@mui/material/CssBaseline';
 
 function SmallContainer(props) {
   return (
@@ -12,6 +13,7 @@ function SmallContainer(props) {
       <Container component="main" maxWidth="xs" width={"100%"} 
         sx={{p: '0px', bgcolor: 'background.paper', marginTop:"10px"}}
       >
+        <CssBaseline />
         <Paper elevation={1} sx={{p:"8px"}}>
           {props.children}
         </Paper>
