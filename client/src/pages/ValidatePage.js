@@ -14,6 +14,69 @@ import Grid from '@mui/material/Grid';
 
 import * as web3 from '@solana/web3.js';
 import {Buffer} from 'buffer/';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Checkbox from '@mui/material/Checkbox';
+import Avatar from '@mui/material/Avatar';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Exchange Rates SOL/USDC',
+    },
+  },
+};
+
+const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+export const data = {
+  labels,
+  datasets: [
+    {
+      label: 'Binance',
+      data: labels.map(() => Math.random()*10),
+      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+    },
+    {
+      label: 'Oracle',
+      data: labels.map(() => Math.random()*10),
+      borderColor: 'rgb(53, 162, 235)',
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+    },
+  ],
+};
 
 const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
 const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
@@ -29,186 +92,13 @@ const toHexString = (bytes) =>
 
 function App() {
 
-  let auth = useAuth();
-
-
-  async function airDrop(){
-    let pk = auth.user;
-
-    const network = "http://127.0.0.1:8899";
-
-    const connection = new web3.Connection(network);
-    let payer = {publicKey: pk};
-    console.log("Generated payer address:", payer.publicKey.toBase58());
-  
-    // fund the "throw away" wallet via an airdrop
-    console.log("Requesting airdrop...");
-    let airdropSignature = await connection.requestAirdrop(
-      payer.publicKey,
-      web3.LAMPORTS_PER_SOL,
-    );
-  
-    // wait for the airdrop to be completed
-    await connection.confirmTransaction(airdropSignature);
-  
-    // log the signature to the console
-
-    console.log(
-      "Airdrop submitted:",
-      `https://explorer.solana.com/tx/${airdropSignature}?cluster=${SOLANA_CLUSTER}`,
-    );
-  }
-
-  async function onClick(){
-    
-    let provider = getProvider();
-    let pk = auth.user;
-
-
-    const network = "http://127.0.0.1:8899";
-
-    const connection = new web3.Connection(network);
-    let payer = {publicKey: pk};
-   
-
-    // const counterKeypair = web3.Keypair.generate();
-    // const s = Buffer.from(counterKeypair.secretKey);
-    // console.log(s);
-
-    // const t = fromHexString(s.toString('hex'));
-    // console.log(t);
-
-    const counterKeypair = web3.Keypair.fromSecretKey(fromHexString(PRIVATE_KEY));
-    // console.log(counterKeypair);
-
-
-    const counter = counterKeypair.publicKey;
-
-
-    const COUNTER_ACCOUNT_SIZE = 8;
-    const allocTx = web3.SystemProgram.createAccount({
-      fromPubkey: payer.publicKey,
-      newAccountPubkey: counter,
-      lamports: await connection.getMinimumBalanceForRentExemption(COUNTER_ACCOUNT_SIZE),
-      space: COUNTER_ACCOUNT_SIZE,
-      programId: new web3.PublicKey(PROGRAM_ID)
-    });
-
-
-    const tx2 = new web3.TransactionInstruction({
-      programId: new web3.PublicKey(PROGRAM_ID),
-      keys: [
-        {
-          pubkey: counter,
-          isSigner: false,
-          isWritable: true
-        }
-      ],
-      data: Buffer.from([0x0])
-    });
-
-
-    let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
-    // create an empty transaction
-    let transaction = new web3.Transaction({
-      feePayer: payer.publicKey,
-      recentBlockhash: blockhash,
-    });
-
-    // add a single instruction to the transaction
-    transaction.add(allocTx).add(tx2).sign(counterKeypair);
-
-    // submit the transaction to the cluster
-    console.log("Sending transaction...");
-    const { signature } = await provider.signAndSendTransaction(transaction);
-
-    console.log(
-      "Transaction submitted:",
-      `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
-    );
-  }
-
-  async function onClick2(){
-    
-    let provider = getProvider();
-    let pk = auth.user;
-
-
-    const network = "http://127.0.0.1:8899";
-
-    const connection = new web3.Connection(network);
-    let payer = {publicKey: pk};
-   
-
-    // const counterKeypair = web3.Keypair.generate();
-    // const s = Buffer.from(counterKeypair.secretKey);
-    // console.log(s);
-
-    // const t = fromHexString(s.toString('hex'));
-    // console.log(t);
-
-    const counterKeypair = web3.Keypair.fromSecretKey(fromHexString(PRIVATE_KEY));
-    // console.log(counterKeypair);
-
-
-    const counter = counterKeypair.publicKey;
-
-
-    const COUNTER_ACCOUNT_SIZE = 8;
-    const allocTx = web3.SystemProgram.createAccount({
-      fromPubkey: payer.publicKey,
-      newAccountPubkey: counter,
-      lamports: await connection.getMinimumBalanceForRentExemption(COUNTER_ACCOUNT_SIZE),
-      space: COUNTER_ACCOUNT_SIZE,
-      programId: new web3.PublicKey(PROGRAM_ID)
-    });
-
-
-    const tx2 = new web3.TransactionInstruction({
-      programId: new web3.PublicKey(PROGRAM_ID),
-      keys: [
-        {
-          pubkey: counter,
-          isSigner: false,
-          isWritable: true
-        }
-      ],
-      data: Buffer.from([0x0])
-    });
-
-
-    let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
-    // create an empty transaction
-    let transaction = new web3.Transaction({
-      feePayer: payer.publicKey,
-      recentBlockhash: blockhash,
-    });
-
-    // add a single instruction to the transaction
-    transaction.add(tx2);
-
-    // submit the transaction to the cluster
-    console.log("Sending transaction...");
-    const { signature } = await provider.signAndSendTransaction(transaction);
-
-    let counterAccountInfo = await connection.getAccountInfo(counter, { commitment: "confirmed" });
-    
-    
-    let val = new BN(counterAccountInfo.data, 'le')
-    console.log('-->', val.toNumber());
-
-    console.log(
-      "Transaction submitted:",
-      `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
-    );
-  }
-
   return (
     <SmallContainer>
       <Typography component="h1" variant="h5">
         Oracle Validation
       </Typography>
 
+      <Line options={options} data={data} />
       <TextField
         margin="normal"
         required
@@ -222,6 +112,10 @@ function App() {
         // contentEditable="false"
       />
 
+      <Typography component="h1" variant="h5">
+        Arbitrage Oportunities
+      </Typography>
+      <AlignItemsList />
       <Grid container justifyContent="flex-end">        
         <Button
           color="error"
@@ -242,6 +136,34 @@ function App() {
       </Grid>
       
     </SmallContainer>
+  );
+}
+
+export function AlignItemsList() {
+  return (
+    <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <ListItem
+        // secondaryAction={
+        //   <Checkbox
+        //     edge="end"
+        //     // onChange={handleToggle(value)}
+        //     // checked={checked.indexOf(value) !== -1}
+        //     inputProps={{ 'aria-labelledby': labelId }}
+        //   />
+        // }
+        disablePadding
+      >
+        <ListItemButton>
+          <ListItemAvatar>
+            <Avatar
+              alt={`Avatar n`}
+              src={`/static/images/binance.png`}
+            />
+          </ListItemAvatar>
+          <ListItemText primary={`1.1X SOL`} />
+        </ListItemButton>
+      </ListItem>
+    </List>
   );
 }
 
