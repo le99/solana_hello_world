@@ -28,3 +28,12 @@ solana program deploy ./target/deploy/hello_world.so
 
 
 https://github.com/coral-xyz/anchor
+
+
+
+https://www.anchor-lang.com/docs/installation
+solana-keygen new
+
+```bash
+anchor build
+```

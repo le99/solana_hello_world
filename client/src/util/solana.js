@@ -1,6 +1,9 @@
 import * as web3 from '@solana/web3.js';
 import {Buffer} from 'buffer/';
 
+import * as anchor from "@project-serum/anchor";
+import { Program } from "@project-serum/anchor";
+
 const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
 const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
 const PRIVATE_KEY = "0bf51a027c36bac4e0372e59e809a29273467ff69b996a82cd11a048edb33015a9f656a0a9ca129049780d1b8666ae0a90d4c332a40572bbaa2da8f5ce032cb1";
@@ -46,7 +49,6 @@ export async function airDrop(publicKey){
 export async function createCounter(publicKey){
     
   let provider = getProvider();
-
 
   const network = "http://127.0.0.1:8899";
 
