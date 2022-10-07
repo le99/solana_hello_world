@@ -54,6 +54,7 @@ export const options = {
     title: {
       display: true,
       text: 'Exchange Rates SOL/USDC',
+      color: 'rgba(255, 255, 255, 1)'
     },
   },
 };
@@ -66,8 +67,8 @@ export const data = {
     {
       label: 'Binance',
       data: labels.map(() => Math.random()*10),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      borderColor: 'rgb(240, 185, 11)',
+      backgroundColor: 'rgba(250, 223, 134, 1)',
     },
     {
       label: 'Oracle',
