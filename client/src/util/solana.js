@@ -1,8 +1,8 @@
 import * as web3 from '@solana/web3.js';
 import {Buffer} from 'buffer/';
 
-import * as anchor from "@project-serum/anchor";
-import { Program } from "@project-serum/anchor";
+// import * as anchor from "@project-serum/anchor";
+// import { Program } from "@project-serum/anchor";
 
 const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
 const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
