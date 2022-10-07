@@ -1,11 +1,16 @@
 import * as web3 from '@solana/web3.js';
 import {Buffer} from 'buffer/';
+import * as Adapter from '@solana/wallet-adapter-wallets';
 
-// import * as anchor from "@project-serum/anchor";
-// import { Program } from "@project-serum/anchor";
+import * as anchor from "@project-serum/anchor";
+import { AnchorProvider, Program } from "@project-serum/anchor";
+// import { CounterAnchor } from "./counter_anchor";
+import * as idl  from './counter_anchor.json';
+
+const adapter = new Adapter.PhantomWalletAdapter();
 
 const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
-const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
+const PROGRAM_ID = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS";
 const PRIVATE_KEY = "0bf51a027c36bac4e0372e59e809a29273467ff69b996a82cd11a048edb33015a9f656a0a9ca129049780d1b8666ae0a90d4c332a40572bbaa2da8f5ce032cb1";
 
 import {getProvider, initPhantom} from '../auth/Auth';
@@ -47,70 +52,42 @@ export async function airDrop(publicKey){
 
 
 export async function createCounter(publicKey){
-    
-  let provider = getProvider();
 
   const network = "http://127.0.0.1:8899";
-
   const connection = new web3.Connection(network);
-  let payer = {publicKey};
- 
+  const provider = new AnchorProvider(connection, adapter, {});
 
-  // const counterKeypair = web3.Keypair.generate();
-  // const s = Buffer.from(counterKeypair.secretKey);
-  // console.log(s);
 
-  // const t = fromHexString(s.toString('hex'));
-  // console.log(t);
+  // let provider = getProvider();
+
+  anchor.setProvider(provider);
+
+  
+  const program = new anchor.Program(idl, new web3.PublicKey(PROGRAM_ID), provider);
 
   const counterKeypair = web3.Keypair.fromSecretKey(fromHexString(PRIVATE_KEY));
-  // console.log(counterKeypair);
-
-
   const counter = counterKeypair.publicKey;
 
+  adapter.on("connect", async () =>{
+    await program.methods
+      .initializeCounter()
+      .accounts({ counter, payer: program.provider.publicKey })
+      .signers([counterKeypair])
+      .rpc({ skipPreflight: true, commitment: "confirmed" });
 
-  const COUNTER_ACCOUNT_SIZE = 8;
-  const allocTx = web3.SystemProgram.createAccount({
-    fromPubkey: payer.publicKey,
-    newAccountPubkey: counter,
-    lamports: await connection.getMinimumBalanceForRentExemption(COUNTER_ACCOUNT_SIZE),
-    space: COUNTER_ACCOUNT_SIZE,
-    programId: new web3.PublicKey(PROGRAM_ID)
+    let currentCount = (await program.account.counter.fetch(counter, "confirmed")).count.toNumber();
+
+    console.log(currentCount);
   });
 
+  await adapter.connect();
 
-  const tx2 = new web3.TransactionInstruction({
-    programId: new web3.PublicKey(PROGRAM_ID),
-    keys: [
-      {
-        pubkey: counter,
-        isSigner: false,
-        isWritable: true
-      }
-    ],
-    data: Buffer.from([0x0])
-  });
+  console.log("a");
 
+ 
 
-  let blockhash = (await connection.getLatestBlockhash("finalized")).blockhash;
-  // create an empty transaction
-  let transaction = new web3.Transaction({
-    feePayer: payer.publicKey,
-    recentBlockhash: blockhash,
-  });
+  return;
 
-  // add a single instruction to the transaction
-  transaction.add(allocTx).add(tx2).sign(counterKeypair);
-
-  // submit the transaction to the cluster
-  console.log("Sending transaction...");
-  const { signature } = await provider.signAndSendTransaction(transaction);
-
-  console.log(
-    "Transaction submitted:",
-    `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
-  );
 }
 
 export async function getCounterValue(){
