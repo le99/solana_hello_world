@@ -11,6 +11,10 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
 
 import * as web3 from '@solana/web3.js';
 import {Buffer} from 'buffer/';
@@ -33,6 +37,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
+import * as solana from '../util/solana';
 
 ChartJS.register(
   CategoryScale,
@@ -79,61 +84,97 @@ export const data = {
   ],
 };
 
-const PROGRAM_ID = "4uWRvwKL9xzdxtfTBSYc7Eh3CjMeY9CAs7Db6wXnb72a";
-const SOLANA_CLUSTER = "custom&customUrl=http%3A%2F%2Flocalhost%3A8899";
-
-const PRIVATE_KEY = "0bf51a027c36bac4e0372e59e809a29273467ff69b996a82cd11a048edb33015a9f656a0a9ca129049780d1b8666ae0a90d4c332a40572bbaa2da8f5ce032cb1";
-
-const fromHexString = (hexString) =>
-  Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
-
-const toHexString = (bytes) =>
-  bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
-
-
 function App() {
+  let auth = useAuth();
+
+  const [currency, setCurrency] = React.useState("SOL");
+
+  const [tradeWait, setTradeWait] = React.useState(false);
+
+  async function trade(){
+    setTradeWait(true);
+    await solana.airDrop(auth.user);
+    setTradeWait(false);
+
+  }
 
   return (
     <SmallContainer>
-      <Typography component="h1" variant="h5">
+      <Typography component="h1" variant="h5" align='center'>
         Oracle Validation
       </Typography>
 
-      <Line options={options} data={data} />
+      <Typography component="h1" variant="subtitle1">
+        Staked Asset:
+      </Typography>
+
+      <Grid container sx={{mb: "20px"}}>
+        <Grid item xs={6}>
+          <Typography component="h1" variant="subtitle1">
+            20 SOL
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography component="h1" variant="subtitle1">
+            100 USDC
+          </Typography>
+        </Grid>
+      </Grid>
+
+      
+      
+      <Line options={options} data={data}/>
+      <Typography component="h1" variant="h6" align='center' color={"#0ecb81"}>
+        10/2
+      </Typography>
+
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={currency}
+        label="Age"
+        onChange={(event) => {setCurrency(event.target.value)}}
+      >
+        <MenuItem value={"SOL"}>SOL</MenuItem>
+        <MenuItem value={"USDC"}>USDC</MenuItem>
+      </Select>
+
       <TextField
         margin="normal"
         required
         fullWidth
         name="password"
-        label="SOL/USDC"
+        label={currency}
         type="text"
         id="password"
         autoComplete="current-password"
-        value="10/2"
+        value="10"
         // contentEditable="false"
       />
 
-      <Typography component="h1" variant="h5">
+      {/* <Typography component="h1" variant="h5" align='center'>
         Arbitrage Oportunities
-      </Typography>
-      <AlignItemsList />
-      <Grid container justifyContent="flex-end">        
-        <Button
-          color="error"
-          type="submit"
-          variant="contained"
-          sx={{ mt: 0, mb: 0 }}
-        >
-          Reject
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ mt: 0, mb: 0, ml: 1 }}
-        >
-          Aprove
-        </Button>
+      </Typography> */}
+      {/* <AlignItemsList /> */}
+      <Grid container justifyContent="center">
+        {tradeWait?
+          <LoadingButton loading variant="outlined">
+            Submit
+          </LoadingButton>   
+          :
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            sx={{ mt: 0, mb: 0, ml: 1 }}
+            onClick={trade}
+          >
+            Trade
+          </Button>
 
+        }     
+        
+        
       </Grid>
       
     </SmallContainer>
