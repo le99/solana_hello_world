@@ -90,10 +90,16 @@ function App() {
   const [currency, setCurrency] = React.useState("SOL");
 
   const [tradeWait, setTradeWait] = React.useState(false);
+  const [amount, setAmount] = React.useState(0);
+
+  function onChangeAmount(event){
+    setAmount(event.target.value);
+  }
+
 
   async function trade(){
     setTradeWait(true);
-    await solana.airDrop(auth.user);
+    await solana.incrementCounter(auth.user);
     setTradeWait(false);
 
   }
@@ -148,7 +154,8 @@ function App() {
         type="text"
         id="password"
         autoComplete="current-password"
-        value="10"
+        value={amount}
+        onChange={onChangeAmount}
         // contentEditable="false"
       />
 

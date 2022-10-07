@@ -8,7 +8,6 @@ import {getProvider, initPhantom} from './auth/Auth';
 import * as  BN from 'bn.js';
 
 import * as web3 from '@solana/web3.js';
-import {Buffer} from 'buffer/';
 import * as solana from './util/solana';
 
 
