@@ -144,14 +144,6 @@ export function AlignItemsList() {
   return (
     <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
       <ListItem
-        // secondaryAction={
-        //   <Checkbox
-        //     edge="end"
-        //     // onChange={handleToggle(value)}
-        //     // checked={checked.indexOf(value) !== -1}
-        //     inputProps={{ 'aria-labelledby': labelId }}
-        //   />
-        // }
         disablePadding
       >
         <ListItemButton>
