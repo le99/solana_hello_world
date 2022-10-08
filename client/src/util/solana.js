@@ -172,4 +172,9 @@ export async function incrementCounter(publicKey){
   // submit the transaction to the cluster
   console.log("Sending transaction...");
   const { signature } = await provider.signAndSendTransaction(transaction);
+
+  console.log(
+    "Transaction submitted:",
+    `https://explorer.solana.com/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
+  );
 }

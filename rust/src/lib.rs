@@ -29,7 +29,7 @@ pub fn process_instruction(
     let (instruction_discriminant, instruction_data_inner) = instruction_data.split_at(1);
     match instruction_discriminant[0] {
         0 => {
-            msg!("Instruction: Increment");
+            msg!("Instruction: Oracle Submit");
             process_increment_counter(accounts, instruction_data_inner)?;
         }
         _ => {
@@ -55,6 +55,6 @@ pub fn process_increment_counter(
     counter.count += 1;
     counter.serialize(&mut *counter_account.data.borrow_mut())?;
 
-    msg!("Counter state incremented to {:?}", counter.count);
+    msg!("Oracle SOL/USDC value is: {:?}", counter.count);
     Ok(())
 }
