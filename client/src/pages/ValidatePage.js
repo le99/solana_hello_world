@@ -189,7 +189,7 @@ function App() {
       {
         submitSuccess &&
         <Typography component="h1" variant="subtitle1" align='center' color={"#0ecb81"} sx={{margin: "10px"}}>
-          Trade Succesfull, Gain: 10SOL
+          Trade Succesfull
         </Typography>
       }
       
