@@ -9,6 +9,8 @@ import * as  BN from 'bn.js';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import * as solana from '../util/solana';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import * as web3 from '@solana/web3.js';
 import {Buffer} from 'buffer/';
@@ -29,6 +31,28 @@ function App() {
 
   let auth = useAuth();
 
+  const [tradeWait, setTradeWait] = React.useState(false);
+
+  const [submitSuccess, setSubmitSuccess] = React.useState(null);
+
+  const [amount, setAmount] = React.useState("");
+  function onChangeAmount(event){
+    setAmount(event.target.value);
+  }
+
+  async function onClick(){
+    setTradeWait(true);
+    try{
+      await solana.incrementCounter(auth.user);
+    }
+    catch(err){
+      console.log();
+    }
+    setTradeWait(false);
+
+    setSubmitSuccess(amount);
+  } 
+
   return (
     <SmallContainer>
       <Typography component="h1" variant="h5">
@@ -43,16 +67,35 @@ function App() {
         type="text"
         id="password"
         autoComplete="current-password"
+        value={amount}
+        onChange={onChangeAmount}
       />
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mt: 0, mb: 0 }}
-      >
-        Submit
-      </Button>
+      {(submitSuccess) &&
+        <Typography component="h1" variant="subtitle1">
+          {"Submission Succesfull"}
+        </Typography>
+      }
+
+      {tradeWait?
+        <LoadingButton 
+          fullWidth
+          loading variant="outlined">
+          Submit
+        </LoadingButton>   
+        :
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="success"
+          sx={{ mt: 0, mb: 0, ml: 1 }}
+          onClick={onClick}
+        >
+          Submit
+        </Button>
+
+      }
 
     </SmallContainer>
   );

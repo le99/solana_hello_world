@@ -91,6 +91,7 @@ function App() {
 
   const [tradeWait, setTradeWait] = React.useState(false);
   const [amount, setAmount] = React.useState(0);
+  const [submitSuccess, setSubmitSuccess] = React.useState(null);
 
   function onChangeAmount(event){
     setAmount(event.target.value);
@@ -99,9 +100,14 @@ function App() {
 
   async function trade(){
     setTradeWait(true);
-    await solana.incrementCounter(auth.user);
+    try{
+      await solana.incrementCounter(auth.user);
+    }
+    catch(err){
+      console.log();
+    }
     setTradeWait(false);
-
+    setSubmitSuccess("ok");
   }
 
   return (
@@ -163,6 +169,16 @@ function App() {
         Arbitrage Oportunities
       </Typography> */}
       {/* <AlignItemsList /> */}
+
+
+      {
+        submitSuccess &&
+        <Typography component="h1" variant="subtitle1" align='center' color={"#0ecb81"} sx={{margin: "10px"}}>
+          Trade Succesfull, Gain: 10SOL
+        </Typography>
+      }
+      
+
       <Grid container justifyContent="center">
         {tradeWait?
           <LoadingButton loading variant="outlined">
