@@ -7,6 +7,7 @@ use solana_program::{
     program::{invoke, invoke_signed},
     program_error::ProgramError,
     pubkey::Pubkey,
+    log::{sol_log_compute_units, sol_log_params, sol_log_slice},
     system_instruction,
 };
 
@@ -51,10 +52,16 @@ pub fn process_increment_counter(
         "Counter account must be writable"
     );
 
-    let mut counter = Counter::try_from_slice(&counter_account.try_borrow_mut_data()?)?;
-    counter.count += 1;
-    counter.serialize(&mut *counter_account.data.borrow_mut())?;
+    // let mut counter = Counter::try_from_slice(&counter_account.try_borrow_mut_data()?)?;
+    // let mut counter = Counter::try_from_slice(instruction_data)?;
 
-    msg!("Oracle SOL/USDC value is: {:?}", counter.count);
+    // counter.count += 1;
+    // counter.serialize(&mut *counter_account.data.borrow_mut())?;
+    instruction_data.serialize(&mut *counter_account.data.borrow_mut())?;
+
+
+    msg!("Oracle SOL/USDC value is: {:?}");
+    sol_log_slice(instruction_data);
+
     Ok(())
 }

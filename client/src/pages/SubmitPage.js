@@ -43,7 +43,7 @@ function App() {
   async function onClick(){
     setTradeWait(true);
     try{
-      await solana.incrementCounter(auth.user);
+      await solana.incrementCounter(auth.user, amount);
     }
     catch(err){
       console.log();

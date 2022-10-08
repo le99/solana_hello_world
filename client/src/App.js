@@ -54,7 +54,7 @@ function App() {
   }
 
   async function onClick2(){
-    await solana.incrementCounter(auth.user);
+    await solana.incrementCounter(auth.user, 20);
     const val = await solana.getCounterValue();
     setCountValue(val);  
   }

@@ -117,12 +117,21 @@ export async function getCounterValue(){
   const counterKeypair = web3.Keypair.fromSecretKey(fromHexString(PRIVATE_KEY));
   const counter = counterKeypair.publicKey;
   let counterAccountInfo = await connection.getAccountInfo(counter, { commitment: "confirmed" });
-  let val = new BN(counterAccountInfo.data, 'le').toNumber();
-  return val;
+
+
+  let ss = counterAccountInfo.data.slice(4, 6);
+  
+  let sss = Buffer.from(toHexString(counterAccountInfo.data.slice(4, 6)), 'hex').toString("utf-8");
+  console.log(sss);
+
+
+
+  // let val = new BN(counterAccountInfo.data, 'le').toNumber();
+  return sss;
 }
 
 
-export async function incrementCounter(publicKey){
+export async function incrementCounter(publicKey, num){
   
   let provider = getProvider();
 
@@ -136,15 +145,12 @@ export async function incrementCounter(publicKey){
   const counter = counterKeypair.publicKey;
 
 
-  const COUNTER_ACCOUNT_SIZE = 8;
-  const allocTx = web3.SystemProgram.createAccount({
-    fromPubkey: payer.publicKey,
-    newAccountPubkey: counter,
-    lamports: await connection.getMinimumBalanceForRentExemption(COUNTER_ACCOUNT_SIZE),
-    space: COUNTER_ACCOUNT_SIZE,
-    programId: new web3.PublicKey(PROGRAM_ID)
-  });
+  const toStore = fromHexString(Buffer.from(num+"").toString("hex"));
+  console.log("store" + toStore);
 
+  if(toStore.length != 2){
+    throw("posible error");
+  }
 
   const tx2 = new web3.TransactionInstruction({
     programId: new web3.PublicKey(PROGRAM_ID),
@@ -155,7 +161,7 @@ export async function incrementCounter(publicKey){
         isWritable: true
       }
     ],
-    data: Buffer.from([0x0])
+    data: Buffer.from([0x0, toStore[0], toStore[1], 0x0, 0x0])
   });
 
 

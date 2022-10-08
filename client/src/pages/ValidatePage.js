@@ -93,6 +93,21 @@ function App() {
   const [amount, setAmount] = React.useState(0);
   const [submitSuccess, setSubmitSuccess] = React.useState(null);
 
+
+  let [countVal, setCountValue] = React.useState(null);
+
+  React.useEffect(() => {
+    (async () => {
+      try{
+        let val = await solana.getCounterValue();
+        setCountValue(val);  
+      }
+      catch(err){
+        console.log(err);
+      }
+    })();
+  }, []);
+
   function onChangeAmount(event){
     setAmount(event.target.value);
   }
@@ -137,7 +152,7 @@ function App() {
       
       <Line options={options} data={data}/>
       <Typography component="h1" variant="h6" align='center' color={"#0ecb81"}>
-        10/2
+        {countVal}/1
       </Typography>
 
       <Select
