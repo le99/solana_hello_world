@@ -60,7 +60,7 @@ pub fn process_increment_counter(
     instruction_data.serialize(&mut *counter_account.data.borrow_mut())?;
 
 
-    msg!("Oracle SOL/USDC value is: {:?}");
+    msg!("Oracle SOL/USDC value has been updated to:");
     sol_log_slice(instruction_data);
 
     Ok(())
